@@ -139,6 +139,14 @@
   }
   setCanvasImages();
 
+  function checkMenu() {
+    if (yOffset > 44) {
+      document.body.classList.add("local-nav-sticky");
+    } else {
+      document.body.classList.remove("local-nav-sticky");
+    }
+  }
+
   function setLayout() {
     // 각 스크롤 섹션의 높이 세팅
     for (let i = 0; i < sceneInfo.length; i++) {
@@ -548,6 +556,22 @@
           ) {
             objs.canvas.classList.remove("sticky");
             objs.canvas.style.marginTop = `${scrollHeight * 0.4}px`; // sticky 클래스가 제거되면 콘텐츠가 안보여서 marginTop으로 밀어줘야 함
+            values.canvasCaption_opacity[2].start = values.canvas_scale[2].end;
+            values.canvasCaption_opacity[2].end =
+              values.canvasCaption_opacity[2].start + 0.1;
+            objs.canvasCaption.style.opacity = calcValues(
+              values.canvasCaption_opacity,
+              currentYOffset
+            );
+
+            values.canvasCaption_translateY[2].start =
+              values.canvas_scale[2].end;
+            values.canvasCaption_translateY[2].end =
+              values.canvasCaption_opacity[2].start + 0.1;
+            objs.canvasCaption.style.transform = `translate3d(0,${calcValues(
+              values.canvasCaption_translateY,
+              currentYOffset
+            )}%,0)`;
           }
         }
 
@@ -578,6 +602,7 @@
   window.addEventListener("scroll", () => {
     yOffset = window.pageYOffset;
     scrollLoop();
+    checkMenu();
   });
   window.addEventListener("load", () => {
     // 이미지 포함 모든 요소가 로드되어야 실행
