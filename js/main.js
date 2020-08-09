@@ -629,28 +629,40 @@
     }
   }
 
-  window.addEventListener("scroll", () => {
-    yOffset = window.pageYOffset;
-    scrollLoop();
-    checkMenu();
-    if (!rafState) {
-      rafId = requestAnimationFrame(loop);
-      rafState = true;
-    }
-  });
+  // "load" 이미지 포함 모든 요소가 로드되어야 실행
+  // "DOMContentLoaded" 이미지나 이런건 로드 안되도 DOM만 로드되면 실행
   window.addEventListener("load", () => {
-    // 이미지 포함 모든 요소가 로드되어야 실행
+    document.body.classList.remove("before-load");
     setLayout();
     sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
+
+    window.addEventListener("scroll", () => {
+      yOffset = window.pageYOffset;
+      scrollLoop();
+      checkMenu();
+      if (!rafState) {
+        rafId = requestAnimationFrame(loop);
+        rafState = true;
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 900) {
+        setLayout();
+        sceneInfo[3].values.rectStartY = 0;
+      }
+    });
+
+    window.addEventListener("orientationchange", () => {
+      setTimeout(setLayout, 500);
+    }); // 모바일 가로 세로 바꿀 때
+
+    document
+      .querySelector(".loading")
+      .addEventListener("transitionend", (e) => {
+        document.body.removeChild(e.currentTarget);
+      });
   });
-  //window.addEventListener("DOMContentLoaded", setLayout); // 이미지나 이런건 로드 안되도 DOM만 로드되면 실행
-  window.addEventListener("resize", () => {
-    if (window.innerWidth > 900) {
-      setLayout();
-    }
-    sceneInfo[3].values.rectStartY = 0;
-  });
-  window.addEventListener("orientationchange", setLayout); // 모바일 가로 세로 바꿀 때
 
   setCanvasImages();
 })();

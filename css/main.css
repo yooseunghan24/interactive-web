@@ -1,4 +1,8 @@
 @charset "utf-8";
+.container {
+  /* 아이폰 가로 스크롤 방지 */
+  overflow-x: hidden;
+}
 .global-nav {
   height: 44px;
   padding: 0 1rem;
@@ -22,6 +26,8 @@
   position: fixed;
   top: 0;
   background: rgba(255, 255, 255, 0.1);
+  /* 아이폰 */
+  -webkit-backdrop-filter: saturate(180%) blur(15px);
   backdrop-filter: saturate(180%) blur(15px);
 }
 .global-nav-links,
@@ -124,7 +130,7 @@
   padding: 0 1rem;
   font-size: 1.2rem;
   max-width: 1000px;
-  margin: -8em auto 0;
+  margin: -24rem auto 0;
 }
 .footer {
   display: flex;
@@ -153,11 +159,65 @@
   position: fixed;
   top: 0;
 }
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 100;
+  background: white;
+  opacity: 0;
+  transition: 0.5s;
+}
+.before-load .loading {
+  opacity: 1;
+}
+body.before-load {
+  /* 로딩중일 때는 스크롤 안되게*/
+  overflow: hidden;
+}
+@keyframes loading-spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes loading-circle-ani {
+  0% {
+    stroke-dashoffset: 157;
+  }
+  75% {
+    stroke-dashoffset: -147;
+  }
+  100% {
+    stroke-dashoffset: -157;
+  }
+}
+.loading-circle {
+  width: 54px;
+  height: 54px; /*원의 크기는 50이지만 테두리가 4라서 54로 해줌*/
+  animation: loading-spin 3s infinite;
+}
+.loading-circle circle {
+  stroke: black;
+  stroke-width: 4;
+  stroke-dasharray: 157; /* 자바스크립트에서 getTotalLength()로 stroke의 길이를 얻을 수 있음*/
+  stroke-dashoffset: 0;
+  fill: none;
+  animation: loading-circle-ani 1s infinite;
+}
+.loading-circle:hover circle {
+  stroke-dashoffset: -157;
+}
 #show-scene-0 #scroll-section-0 .sticky-elem,
 #show-scene-1 #scroll-section-1 .sticky-elem,
 #show-scene-2 #scroll-section-2 .sticky-elem,
 #show-scene-3 #scroll-section-3 .sticky-elem {
   display: block;
+  will-change: transform, opacity;
 }
 #scroll-section-3 {
   display: flex;
@@ -199,6 +259,7 @@
     padding: 0;
   }
   .canvas-caption {
+    margin-top: -8rem;
     font-size: 2rem;
     padding: 0;
   }
