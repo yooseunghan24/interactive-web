@@ -635,6 +635,19 @@
     document.body.classList.remove("before-load");
     setLayout();
     sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
+    //새로고침하면 이미지가 안나오는 경우가 있음. 이는 스크롤이 됐을 때만 나타나게 해서 그럼. 그래서 새로고침하면 자동으로 scroll 위치를 조금 움직여줘서 이미지가 나오게 할 것임.
+    let tempYOffset = yOffset;
+    let tempScrollCount = 0;
+    if (yOffset > 0) {
+      let siId = setInterval(() => {
+        window.scrollTo(0, tempYOffset);
+        tempYOffset += 1;
+        if (tempScrollCount > 20) {
+          clearInterval(siId);
+        }
+        tempScrollCount += 1;
+      }, 20);
+    }
 
     window.addEventListener("scroll", () => {
       yOffset = window.pageYOffset;
